@@ -128,16 +128,96 @@ function fetchBrainParts() {
     });
 }
 
+function submitChat(event) {
+  event.preventDefault(); // Prevent default form submission behavior
 
-function submitChat() {
-  var chatInput = document.getElementById("chatInput").value;
-  fetch("/chat/input", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message: chatInput }),
-  });
-  // Clear the input field
-  document.getElementById("chatInput").value = "";
+  const chatData = {
+    situation: document.getElementById('situation').value,
+    phenotype: document.getElementById('phenotype').value,
+    internalState: document.getElementById('internalState').value,
+    motivatedBehavior: document.getElementById('motivatedBehavior').value,
+    brainParts: brainParts
+  };
+
+  fetch('/t1', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(chatData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      const t2ResponseContainer = document.getElementById('t2Response');
+      t2ResponseContainer.innerHTML = '';
+      const t3ResponseContainer = document.getElementById('t3Response');
+      t3ResponseContainer.innerHTML = '<div class="loader"></div>'; // Display loading icon
+
+      data.forEach(item => {
+        const cardHtml = `
+            <div class="border mb-2 p-2">
+                <h5 class="font-bold">${item.title}</h5>
+                <p>${item.t2}</p>
+                <p>Chat ID: ${item.chat_id}</p>
+                <p>Usage: ${item.usage.prompt_tokens}</p>
+                <p>Usage: ${item.usage.completion_tokens}</p>
+                <p>Usage: ${item.usage.total_tokens}</p>
+            </div>
+        `;
+        t2ResponseContainer.insertAdjacentHTML('beforeend', cardHtml);
+        let index = findBrainPart(item.title);
+        brainParts[index].chat = item.t2;
+      });
+
+      callT4Api(brainParts);
+    });
 }
+
+function callT4Api(t3Data) {
+  const t4ResponseContainer = document.getElementById('t4Response');
+  const t3ResponseContainer = document.getElementById('t3Response');
+  t3ResponseContainer.innerHTML = '';
+
+  setTimeout(function () {
+    t3ResponseContainer.innerHTML = '<div class="loader"></div>';
+  }, 3000);
+
+  const chatData = {
+    situation: document.getElementById('situation').value,
+    phenotype: document.getElementById('phenotype').value,
+    internalState: document.getElementById('internalState').value,
+    motivatedBehavior: document.getElementById('motivatedBehavior').value,
+    brainParts: t3Data
+  };
+  fetch('/t4', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(chatData)
+  })
+    .then(response => response.json())
+    .then(t4Data => {
+      t3ResponseContainer.innerHTML = '';
+      t4ResponseContainer.innerHTML = `
+            <div class="border mb-2 p-2">
+                <h5 class="font-bold">${t4Data.title}</h5>
+                <p>${t4Data.t4}</p>
+                <p>Chat ID: ${t4Data.chat_id}</p>
+                <p>Usage: ${t4Data.usage.prompt_tokens}</p>
+                <p>Usage: ${t4Data.usage.completion_tokens}</p>
+                <p>Usage: ${t4Data.usage.total_tokens}</p>
+            </div>
+        `;
+    })
+}
+
+
+// function submitChat() {
+//   var chatInput = document.getElementById("chatInput").value;
+//   fetch("/chat/input", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ message: chatInput }),
+//   });
+//   // Clear the input field
+//   document.getElementById("chatInput").value = "";
+// }
