@@ -67,6 +67,11 @@ def default_brain():
             "title": "Nuclaus Accumbens",
             "initialize": "you are an expert at imaginging what the Nucleus Accumbens i is thinking about in it's inner voice. Consider the putative functions of the Nucleus Accumbens i;  To do so, you read scientific papers that look at different aspects of how the  Nucleus Accumbens influences behaviour, for example in relationship to Reward Processing, Motivation, Reinforcement Learning, Dopaminergic Signaling, Addiction and Craving, Decision-Making, Social Reward, Emotional Regulation, Learning from Feedback, Anhedonia, Positive Reinforcement, Appetite and Eating Behavior, etc. assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
             "prompt": "tell me how the Nuclaus Accumbens would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
+        },
+        {
+            "title": "Add",
+            "initialize": "",
+            "prompt": ""
         }
     ])
 
