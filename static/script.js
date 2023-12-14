@@ -36,11 +36,11 @@ function openModal(title) {
     document.getElementById('modalTitleInput').value = brainParts[data].title;
     document.getElementById('modalContentInitialize').value = brainParts[data].initialize;
     document.getElementById('modalContentPrompt').value = brainParts[data].prompt;
-    document.getElementById('modalTitle').classList.add('hidden');
-    document.getElementById('modalTitleInput').classList.remove('hidden');
-  } else {
     document.getElementById('modalTitle').classList.remove('hidden');
     document.getElementById('modalTitleInput').classList.add('hidden');
+  } else {
+    document.getElementById('modalTitle').classList.add('hidden');
+    document.getElementById('modalTitleInput').classList.remove('hidden');
     document.getElementById('modalTitle').innerText = '';
     document.getElementById('modalTitleInput').value = '';
     document.getElementById('modalContentInitialize').value = '';
@@ -53,11 +53,13 @@ function closeModal() {
 }
 
 function saveAnswer() {
-  let title = document.getElementById('modalTitle').innerText;
+  let title = document.getElementById('modalTitleInput').value;
   let initialize = document.getElementById('modalContentInitialize').value;
   let promptText = document.getElementById('modalContentPrompt').value;
   localStorage.setItem(title, initialize + '~~' + promptText);
+
   if (findBrainPart(title) < 0) {
+
     title = title;
     initialize = initialize;
     promptText = promptText;
@@ -70,6 +72,7 @@ function saveAnswer() {
             </div>
         </div>
     `;
+
     const add = document.getElementById('add');
     add.insertAdjacentHTML('beforebegin', cardHtml);
     let data = findBrainPart(title);
@@ -81,6 +84,7 @@ function saveAnswer() {
       brainParts.push({ title, initialize, prompt: promptText });
     }
   }
+
   closeModal();
 }
 
@@ -176,9 +180,7 @@ function callT4Api(t3Data) {
   const t3ResponseContainer = document.getElementById('t3Response');
   t3ResponseContainer.innerHTML = '';
 
-  setTimeout(function () {
-    t3ResponseContainer.innerHTML = '<div class="loader"></div>';
-  }, 3000);
+
 
   const chatData = {
     situation: document.getElementById('situation').value,
