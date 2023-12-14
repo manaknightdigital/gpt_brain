@@ -1,11 +1,11 @@
-from flask import Flask
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 @app.route("/")
 def chat():
-    return "<p>chat</p>"
+    return render_template('index.html')
 
 @app.route("/memory")
 def memory():
@@ -19,9 +19,16 @@ def update_apikey(name):
 def memory_section(name):
     return "<p>memory sectioned</p>"
 
-@app.route("/brain/agent/<name>", method=["POST"])
+@app.route("/brain/agent/<name>", methods=["POST"])
 def brain_agent(name):
     return "<p>Calling the agent</p>"
+
+@app.route("/chat/input", methods=["POST"])
+def chat_input():
+    data = request.json
+    message = data.get('message')
+    # Process the chat message
+    return 'Message received', 200
 
 
 
