@@ -31,7 +31,7 @@ def t2():
         if item['title'].lower() == 'add':
             break
 
-        prompt = item['prompt']
+        prompt = item['prompt'] + ' Point form answers.'
         prompt = prompt.replace("#SI", "(" + data['situation'] + ")")
         prompt = prompt.replace("#PT", "(" + data['phenotype'] + ")")
         prompt = prompt.replace("#MD", "(" + data['motivatedBehavior'] + ")")
@@ -66,7 +66,7 @@ def t4():
     brainData = data['brainParts']
 
     initialize = 'you are an expert on the Prefrontal Cortex (PFC) and its subparts, and connections to other brain regions, in particular as to how all  of these influence behaviour, particularly in the next action to take. you consider all relevant inputs;'
-    prompt = 'tell me how the Prefrontal Cortex (PFC) would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT and whose internal state is described as #IS  our motivation is to #MD.  To guide your thinking consider how well it aligns towards your objective #MD and how well it takes into account the need to solve any obstacles, obstructions, or difficulties, while at the same time creatively looking for solutions via opportunities, shortcuts, etc. also consider the actions that gives you the most progress at an acceptable degree of risk."  make sure you give each brain part\'s inner voice consideration  below , but you decide to what degree.  once you told me about what your "PFC inner voice" is thinking, tell what action you intend to take.'
+    prompt = 'tell me how the Prefrontal Cortex (PFC) would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT and whose internal state is described as #IS  our motivation is to #MD.  To guide your thinking consider how well it aligns towards your objective #MD and how well it takes into account the need to solve any obstacles, obstructions, or difficulties, while at the same time creatively looking for solutions via opportunities, shortcuts, etc. also consider the actions that gives you the most progress at an acceptable degree of risk."  make sure you give each brain part\'s inner voice consideration  below , but you decide to what degree.  once you told me about what your "PFC inner voice" is thinking, tell what action you intend to take. Keep the answer short and limit rationale in 2 sentences. Point form answers.'
     prompt = prompt.replace("#SI", "(" + data['situation'] + ")")
     prompt = prompt.replace("#PT", "(" + data['phenotype'] + ")")
     prompt = prompt.replace("#MD", "(" + data['motivatedBehavior'] + ")")
@@ -102,6 +102,124 @@ def t4():
             "total_tokens": response.usage.total_tokens
         }
     })
+
+@app.route('/t5', methods=['POST'])
+def t5():
+    data = request.json
+    client = OpenAI(api_key=openaiKey)
+
+    allBrain = 'tell me how the Nuclaus Accumbens, Ventral Striatum, Hippocampus, Temporal Parietal Junction, Amygdala, Insula, Anterior Cingulate Cortex would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD . Point form answers.'
+    allBrain = allBrain.replace("#SI", "(" + data['situation'] + ")")
+    allBrain = allBrain.replace("#PT", "(" + data['phenotype'] + ")")
+    allBrain = allBrain.replace("#MD", "(" + data['motivatedBehavior'] + ")")
+
+    allBrainResponse = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        n=1,
+        messages=[
+            {"role": "user", "content": allBrain}
+        ]
+        )
+
+    finalData = {
+        'title': "Prefrontal Cortex (PFC)",
+        't5': allBrainResponse.choices[0].message.content,
+        'chat_id': allBrainResponse.id,
+        'usage': {
+            "prompt_tokens": allBrainResponse.usage.prompt_tokens,
+            "completion_tokens": allBrainResponse.usage.completion_tokens,
+            "total_tokens": allBrainResponse.usage.total_tokens
+        }
+    }
+
+    initialize = 'you are an expert on the Prefrontal Cortex (PFC) and its subparts, and connections to other brain regions, in particular as to how all  of these influence behaviour, particularly in the next action to take. you consider all relevant inputs;'
+    prompt = 'tell me how the Prefrontal Cortex (PFC) would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT and whose internal state is described as #IS  our motivation is to #MD.  To guide your thinking consider how well it aligns towards your objective #MD and how well it takes into account the need to solve any obstacles, obstructions, or difficulties, while at the same time creatively looking for solutions via opportunities, shortcuts, etc. also consider the actions that gives you the most progress at an acceptable degree of risk."  make sure you give each brain part\'s inner voice consideration  below , but you decide to what degree.  once you told me about what your "PFC inner voice" is thinking, tell what action you intend to take. Keep the answer short and limit rationale in 2 sentences. Point form answers.'
+    prompt = prompt.replace("#SI", "(" + data['situation'] + ")")
+    prompt = prompt.replace("#PT", "(" + data['phenotype'] + ")")
+    prompt = prompt.replace("#MD", "(" + data['motivatedBehavior'] + ")")
+    prompt = prompt + " Sub Brain Answers: " + allBrainResponse.choices[0].message.content
+
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    n=1,
+    messages=[
+        {"role": "system", "content": initialize},
+        {"role": "user", "content": prompt}
+    ]
+    )
+
+    finalData['t5b'] = response.choices[0].message.content
+    finalData['t5b_chat_id'] = response.id
+    finalData['usage']['prompt_tokens'] = finalData['usage']['prompt_tokens'] + response.usage.prompt_tokens
+    finalData['usage']['completion_tokens'] = finalData['usage']['completion_tokens'] + response.usage.completion_tokens
+    finalData['usage']['total_tokens'] = finalData['usage']['total_tokens'] + response.usage.total_tokens
+    return jsonify(finalData)
+
+@app.route('/t6', methods=['POST'])
+def t6():
+    data = request.json
+    client = OpenAI(api_key=openaiKey)
+
+    diseases = [
+      "ADHD",
+      "Tourette's",
+      "Alzheimer's",
+      "Schizophrenia",
+      "Bipolar Disorder",
+      "Borderline Personality Disorder",
+      "Autism Spectrum Disorder (ASD)",
+      "Obsessive-Compulsive Disorder (OCD)",
+      "Post-Traumatic Stress Disorder (PTSD)",
+    ]
+
+    allBrain = 'tell me how the Nuclaus Accumbens, Ventral Striatum, Hippocampus, Temporal Parietal Junction, Amygdala, Insula, Anterior Cingulate Cortex would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD . Point form answers.'
+    allBrain = allBrain.replace("#SI", "(" + data['situation'] + ")")
+    allBrain = allBrain.replace("#PT", "(" + data['phenotype'] + ")")
+    allBrain = allBrain.replace("#MD", "(" + data['motivatedBehavior'] + ")")
+
+    allBrainResponse = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        n=1,
+        messages=[
+            {"role": "user", "content": allBrain}
+        ]
+        )
+
+    finalData = {
+        'title': "Prefrontal Cortex (PFC)",
+        't5': allBrainResponse.choices[0].message.content,
+        't6': [],
+        'chat_id': allBrainResponse.id,
+        'usage': {
+            "prompt_tokens": allBrainResponse.usage.prompt_tokens,
+            "completion_tokens": allBrainResponse.usage.completion_tokens,
+            "total_tokens": allBrainResponse.usage.total_tokens
+        }
+    }
+
+    for disease in diseases:
+      initialize = 'you are an expert on the Prefrontal Cortex (PFC) and its subparts, and connections to other brain regions, in particular as to how all  of these influence behaviour, particularly in the next action to take. you consider all relevant inputs;'
+      prompt = 'tell me how the Prefrontal Cortex (PFC) would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT and whose internal state is described as #IS  our motivation is to #MD.  To guide your thinking consider how well it aligns towards your objective #MD and how well it takes into account the need to solve any obstacles, obstructions, or difficulties, while at the same time creatively looking for solutions via opportunities, shortcuts, etc. also consider the actions that gives you the most progress at an acceptable degree of risk."  make sure you give each brain part\'s inner voice consideration  below , but you decide to what degree.  once you told me about what your "PFC inner voice" is thinking, tell what action you intend to take. Keep the answer short and limit rationale in 2 sentences.'
+      prompt = 'Point form answers. Please take into account that you suffer from ' + disease
+      prompt = prompt.replace("#SI", "(" + data['situation'] + ")")
+      prompt = prompt.replace("#PT", "(" + data['phenotype'] + ")")
+      prompt = prompt.replace("#MD", "(" + data['motivatedBehavior'] + ")")
+      prompt = prompt + " Sub Brain Answers: " + allBrainResponse.choices[0].message.content
+
+      response = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      n=1,
+      messages=[
+          {"role": "system", "content": initialize},
+          {"role": "user", "content": prompt}
+      ]
+      )
+
+      finalData['t6'].append('Disease: ' + disease + '<br/>' + response.choices[0].message.content)
+      finalData['usage']['prompt_tokens'] = finalData['usage']['prompt_tokens'] + response.usage.prompt_tokens
+      finalData['usage']['completion_tokens'] = finalData['usage']['completion_tokens'] + response.usage.completion_tokens
+      finalData['usage']['total_tokens'] = finalData['usage']['total_tokens'] + response.usage.total_tokens
+    return jsonify(finalData)
 
 @app.route("/t41", methods=["POST"])
 def dummy2():

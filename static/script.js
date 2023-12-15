@@ -139,6 +139,13 @@ function fetchBrainParts() {
     });
 }
 
+function showAllSpinners() {
+  var spinners = document.querySelectorAll(".spinner");
+  spinners.forEach(function (spinner) {
+    spinner.classList.remove("hidden");
+  });
+}
+
 function submitChat(event) {
   event.preventDefault(); // Prevent default form submission behavior
 
@@ -150,6 +157,7 @@ function submitChat(event) {
     brainParts: brainParts,
   };
 
+  showAllSpinners();
   fetch("/t1", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -159,14 +167,12 @@ function submitChat(event) {
     .then((data) => {
       const t2ResponseContainer = document.getElementById("t2Response");
       t2ResponseContainer.innerHTML = "";
-      const t3ResponseContainer = document.getElementById("t3Response");
-      t3ResponseContainer.innerHTML = '<div class="loader">&nbsp;</div>'; // Display loading icon
 
       data.forEach((item) => {
         const cardHtml = `
             <div class="border mb-2 p-2">
                 <h5 class="font-bold">${item.title}</h5>
-                <p>${item.t2}</p>
+                <p>${item.t2.split("-").join("-<br/>")}</p>
                 <p>Chat ID: ${item.chat_id}</p>
                 <p>Usage: ${item.usage.prompt_tokens}</p>
                 <p>Usage: ${item.usage.completion_tokens}</p>
@@ -179,13 +185,13 @@ function submitChat(event) {
       });
 
       callT4Api(brainParts);
+      callT5Api();
+      callT6Api();
     });
 }
 
 function callT4Api(t3Data) {
   const t4ResponseContainer = document.getElementById("t4Response");
-  const t3ResponseContainer = document.getElementById("t3Response");
-  t3ResponseContainer.innerHTML = "";
 
   const chatData = {
     situation: document.getElementById("situation").value,
@@ -201,11 +207,10 @@ function callT4Api(t3Data) {
   })
     .then((response) => response.json())
     .then((t4Data) => {
-      t3ResponseContainer.innerHTML = "";
       t4ResponseContainer.innerHTML = `
             <div class="border mb-2 p-2">
                 <h5 class="font-bold">${t4Data.title}</h5>
-                <p>${t4Data.t4}</p>
+                <p>${t4Data.t4.split("-").join("-<br/>")}</p>
                 <p>Chat ID: ${t4Data.chat_id}</p>
                 <p>Usage: ${t4Data.usage.prompt_tokens}</p>
                 <p>Usage: ${t4Data.usage.completion_tokens}</p>
@@ -215,15 +220,62 @@ function callT4Api(t3Data) {
     });
 }
 
-// function submitChat() {
-//   var chatInput = document.getElementById("chatInput").value;
-//   fetch("/chat/input", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ message: chatInput }),
-//   });
-//   // Clear the input field
-//   document.getElementById("chatInput").value = "";
-// }
+function callT6Api() {
+  const t6ResponseContainer = document.getElementById("t6Response");
+
+  const chatData = {
+    situation: document.getElementById("situation").value,
+    phenotype: document.getElementById("phenotype").value,
+    internalState: document.getElementById("internalState").value,
+    motivatedBehavior: document.getElementById("motivatedBehavior").value,
+  };
+  fetch("/t6", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(chatData),
+  })
+    .then((response) => response.json())
+    .then((t6Data) => {
+      t6ResponseContainer.innerHTML = `
+            <div class="border mb-2 p-2">
+                <h5 class="font-bold">${t6Data.title}</h5>
+                <p>${t6Data.t6.join("<br/>").split("-").join("-<br/>")}</p>
+                <p>Chat ID: ${t6Data.chat_id}</p>
+                <p>Usage: ${t6Data.usage.prompt_tokens}</p>
+                <p>Usage: ${t6Data.usage.completion_tokens}</p>
+                <p>Usage: ${t6Data.usage.total_tokens}</p>
+            </div>
+        `;
+    });
+}
+
+function callT5Api() {
+  const t5ResponseContainer = document.getElementById("t5Response");
+
+  const chatData = {
+    situation: document.getElementById("situation").value,
+    phenotype: document.getElementById("phenotype").value,
+    internalState: document.getElementById("internalState").value,
+    motivatedBehavior: document.getElementById("motivatedBehavior").value,
+  };
+  fetch("/t5", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(chatData),
+  })
+    .then((response) => response.json())
+    .then((t5Data) => {
+      t5ResponseContainer.innerHTML = `
+            <div class="border mb-2 p-2">
+                <h5 class="font-bold">${t5Data.title}</h5>
+                <p>${t5Data.t5b.split("-").join("-<br/>")}</p>
+                <br/>
+                <p>Brain Parts: ${t5Data.t5.split("-").join("-<br/>")}</p>
+                <p>Chat ID: ${t5Data.chat_id}</p>
+                <p>Usage: ${t5Data.usage.prompt_tokens}</p>
+                <p>Usage: ${t5Data.usage.completion_tokens}</p>
+                <p>Usage: ${t5Data.usage.total_tokens}</p>
+            </div>
+        `;
+    });
+}
