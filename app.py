@@ -19,7 +19,7 @@ def update_apikey(name):
     openaiKey = name
     return "Updated", 200
 
-@app.route('/t11', methods=['POST'])
+@app.route('/t1', methods=['POST'])
 def t2():
     data = request.json
     brainData = data['brainParts']
@@ -60,7 +60,7 @@ def t2():
 
     return jsonify(response_texts)
 
-@app.route('/t41', methods=['POST'])
+@app.route('/t4', methods=['POST'])
 def t4():
     data = request.json
     brainData = data['brainParts']
@@ -103,7 +103,7 @@ def t4():
         }
     })
 
-@app.route("/t4", methods=["POST"])
+@app.route("/t41", methods=["POST"])
 def dummy2():
     return jsonify({
     "chat_id": "chatcmpl-8ViLTN0NKapjcr6OMGhPHciH9QrNB",
@@ -116,7 +116,7 @@ def dummy2():
     }
 })
 
-@app.route("/t1", methods=["POST"])
+@app.route("/t11", methods=["POST"])
 def dummy():
     return jsonify([
     {
@@ -203,7 +203,7 @@ def default_brain():
     return jsonify([
         {
             "title": "Anterior Cingulate Cortex (ACC)",
-            "initialize": "you are an expert at imagining what the ACC is thinking about in it's inner voice. Consider the putative functions of the ACC;  To do so, you read scientific papers that look at different aspects of how the ACC influences behaviour, for example in relationship  of what is attended to, what is deemed important, using for example approaches as the  The “choice difficulty” hypothesis (CD) or expected value of control” hypothesis (EVC), “predicted response outcome” hypothesis (PRO, etc.  You concern yourself with activating memories, etc.  Do no t make up any memories, assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the ACC and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the Anterior Cingulate Cortex (ACC) is thinking about in it's inner voice. Consider the putative functions of the ACC. To do so, you read scientific papers that look at different aspects of how the ACC is involved in emotional awareness, attention allocation, body monitoring. Do not make up any memories, and assume that you behave with a stereotypical personality, with no neurological or psychiatric disorders.  To create your inner voice text, take into consideration the cognitive function of the ACC in the situation that you are being asked to interpret. Do not provide a rationalization or make any decisions. ONLY provide the inner dialogue of the ACC at this moment.",
             "prompt": "tell me how the ACC would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
@@ -213,27 +213,27 @@ def default_brain():
         },
         {
             "title": "Amygdala",
-            "initialize": "you are an expert at imagining what the amygdala is thinking about in it's inner voice. Consider the putative functions of the amygdala;  To do so, you read scientific papers that look at different aspects of how the amygdala  influences behaviour, for example in relationship to  Emotion Processing:, Emotional Learning and Memory, Social and Emotional Behavior:, Stress Response: , Reward and Punishment Processing, Impulsivity and Aggression: , etc . assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the amygdala is thinking about in it's inner voice. Consider the putative functions of the amygdala.  To do so, you read scientific papers that look at different aspects of how the amygdala activates the fight-or-flight response and regulates the reward-punishment processing. Assume that you behave with a stereotypical personality with no neurological or psychiatric disorders.  To create your inner voice text, consider the function of the amygdala  and the situation that you are being asked to interpret. Do not provide a rationalization or make any decisions. ONLY provide the inner dialogue of the Amygdala at this moment.",
             "prompt": "tell me how the Amygdala would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
             "title": "Temporal Parietal Junction (TPJ)",
-            "initialize": "you are an expert at imaginging what the Temporal Parietal Junction (TPJ): is thinking about in it's inner voice. Consider the putative functions of the TPJ;  To do so, you read scientific papers that look at different aspects of how the TPJ  influences behaviour, for example in relationship to  Empathy, social cognition, Attentional Shifting:, Conflict Resolution: , Perspective-Taking: etc.  . assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the Temporal Parietal Junction (TPJ) is thinking about in it's inner voice. Consider the putative functions of the TPJ. To do so, you read scientific papers that look at how the TPJ incorporates information from the visual, auditory, and somatosensory system. Assume that you behave with a specific stereotypical personality with no neurological or psychiatric disorders.  To create your inner voice text, consider the function of the TPJ in decision making and the situation that you are being asked to interpret.  You are an expert at imagining what the amygdala is thinking about in it's inner voice. Consider the putative functions of the amygdala.  To do so, you read scientific papers that look at different aspects of how the amygdala activates the fight-or-flight response and regulates the reward-punishment processing. Assume that you behave with a stereotypical personality with no neurological or psychiatric disorders.  To create your inner voice text, consider the function of the amygdala  and the situation that you are being asked to interpret. Do not provide a rationalization or make any decisions. ONLY provide the inner dialogue of the TPJ at this moment.",
             "prompt": "tell me how the TPJ would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
             "title": "Hippocampus",
-            "initialize": "you are an expert at imaginging what the Hippocampus is thinking about in it's inner voice. Consider the putative functions of the hippocampus;  To do so, you read scientific papers that look at different aspects of how the  hippocampus:   influences behaviour, for example in relationship to  Memory Formation: Declarative Memory, Emotion and Memory, etc . assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the hippocampus is thinking about in it's inner voice. Consider the putative functions of the hippocampus.  To do so, you read scientific papers that look at hippocampal function in declarative, spatial, semantic, and working memory. Assume that you behave with a stereotypical personality with no neurological and psychiatric disorders.  To create your inner voice text, consider hippocampal function in decision making and the situation that you are being asked to interpret. ONLY focus on the functions of the Hippocampus.",
             "prompt": "tell me how the Hippocampus would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
             "title": "Ventral Striatum",
-            "initialize": "you are an expert at imaginging what the  Ventral Striatum: is thinking about in it's inner voice. Consider the putative functions of the  Ventral Striatum:;  To do so, you read scientific papers that look at different aspects of how the   Ventral Striatum::   influences behaviour, for example in relationship to Reward Processing, Motivation, craving, Decision-Making, Social Reward, Emotional Regulation, Anhedonia, Risk and Uncertainty, etc. assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the Ventral Striatum is thinking about in it's inner voice. Consider the putative functions of the Ventral Striatum. To do so, you read scientific papers that look at different aspects of how the Ventral Striatum relates to motor and action planning and connections to the nucleus accumbens. Assume that you behave with a stereotypical personality with no neurological or psychiatric disorders.  To create your inner voice text, consider what humans know about the ventral striatum and the situation that you are being asked to interpret. ONLY focus on function of the Ventral Striatum.",
             "prompt": "tell me how the Ventral Striatum would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
             "title": "Nuclaus Accumbens",
-            "initialize": "you are an expert at imaginging what the Nucleus Accumbens i is thinking about in it's inner voice. Consider the putative functions of the Nucleus Accumbens i;  To do so, you read scientific papers that look at different aspects of how the  Nucleus Accumbens influences behaviour, for example in relationship to Reward Processing, Motivation, Reinforcement Learning, Dopaminergic Signaling, Addiction and Craving, Decision-Making, Social Reward, Emotional Regulation, Learning from Feedback, Anhedonia, Positive Reinforcement, Appetite and Eating Behavior, etc. assume that you normally behave with a specific stereotypical personality.  To create your inner voice text, just take into consideration what humans know about the insula and the situation that you are being asked to interpret.",
+            "initialize": "You are an expert at imagining what the Nucleus Accumbens is thinking about in it's inner voice. Consider the putative functions of the Nucleus Accumbens. To do so, you read scientific papers that look at different aspects of how the Nucleus Accumbens mediates motivation and reward and pleasure pathways (VTA). Assume that you behave with a stereotypical personality with no neurological or psychiatric disorders.  To create your inner voice text, consider the function of the nucleus accumbens in decision making and the situation that you are being asked to interpret. ONLY focus on the functions of the Nucleus Accumbens.",
             "prompt": "tell me how the Nuclaus Accumbens would be thinking (inner voice, inner speech) about the following situation; #SI  and consider this for the case whose phenotype is described as #PT.  Your motivation is to #MD"
         },
         {
